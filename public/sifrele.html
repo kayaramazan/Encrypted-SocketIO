@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+
+    #SezarSection {
+        display:none;
+    }
+    </style>
+    <script>
+        //Sezar sifreleme
+const letters = "QWERTYUIOPASDFGHJKLZXCVBNMĞÜŞİÖÇabcçdefgğhıijklmnoöpqrsştuüvwxyz -=+1234567890!@#$%^&*()_/|><.,;:''[]{}";
+function Sezarsifrele(key,word) {
+    var sifre = "";
+       for(var i = 0; i < word.length;i++)
+        {
+            var locat = letters.indexOf(word[i]);  
+            ptr = (locat + key); 
+            sifre += letters[ptr]; 
+        }   
+    return sifre;
+}
+function Sezarcoz(key,code) {
+    var ansswer = "";
+    for(var i = 0; i < code.length;i++)
+        {
+            var locat = letters.indexOf(code[i]);  
+            ptr = (locat - key);
+            if(ptr < 0 )
+            ptr = letters.length + ptr;
+            ansswer += letters[ptr]; 
+        }   
+        return ansswer;
+}
+function changeFunc()
+{
+    var selectBox = document.getElementById("selectBox");
+    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+   if (selectedValue == "sezar")
+   { document.getElementById("SezarSection").style.display = 'block';
+   }
+}
+function sSifrele()
+{
+var metin = document.getElementById('smetin').value;
+var keys = document.getElementById('skey').value; 
+alert(Sezarsifrele(parseInt(keys),metin));
+}
+
+function sCoz()
+{
+var metin = document.getElementById('sSifrecoz').value;
+var keya = document.getElementById('skeycoz').value; 
+alert(Sezarcoz(parseInt(keya),metin));
+}
+//Sezar bitis
+    </script>
+</head>
+<body>
+<table>
+    <tr><td>Sifreleme Turu Seciniz </td>
+    <td><select  name="" id="selectBox" onchange="changeFunc();">
+        <option  value="heyyas">Sifreleme Methodu Seciniz</option>
+        <option value="sezar"   id="sezar">Sezar Sifreleme</option>
+    </select></td></tr>
+    <tbody id="SezarSection"><tr >
+            <td >
+                 Metni Giriniz : 
+                </td>
+                <td>
+                <input type="text"  id="smetin">
+            </td> </tr>
+            <tr><td>
+                    Anahtar: 
+                </td>
+                <td>
+                <input type="text"  id="skey">
+            </td>
+        </tr>
+        <tr><td>
+         
+            </td>
+            <td>
+            <button onclick="sSifrele();">Sifrele</button>
+        </td>
+        </tr>
+        <tr><td>
+                Sifrelenmis Metin: 
+            </td>
+            <td>
+            <input type="text"  id="sSifrecoz">
+        </td>
+        </tr>
+        <tr>
+                <tr><td>
+                        Anahtar: 
+                    </td>
+                    <td>
+                    <input type="text"  id="skeycoz">
+                </td>
+                <td>
+
+        </td>
+        <td>
+        <button onclick="sCoz();">Coz</button>
+        </td>
+        </tr>
+    
+</tbody>
+
+</table>
+</body>
+</html>
