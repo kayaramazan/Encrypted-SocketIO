@@ -1,6 +1,6 @@
 
 
-var socket = io.connect('http://localhost:4000');
+var socket = io.connect('http://localhost:4000'); 
 var message = document.getElementById('message');
 var handle2 = document.getElementById('handle2');
 var handle = document.getElementById('handle');
@@ -10,24 +10,24 @@ var sifreTuru = document.getElementById('turu').value;
 var typer = document.getElementById('typer');
 var soltaraf = document.getElementById('sol');
 var kullanici = prompt('Kullanici adinizi giriniz');
-const keyVal = 3;
+
+
 const letters = "QWERTYUIOPASDFGHJKLZXCVBNMĞÜŞİÖÇabcçdefgğhıijklmnoöpqrsştuüvwxyz -=+1234567890!@#$%^&*()_/|><.,;:''[]{}";
 handle.value = kullanici
 handle2.innerHTML = 'Kullanici Adin : @' + kullanici;
 //emit event 
 socket.emit('yeniGiris', kullanici);
 btn.addEventListener('click', function () {
-
+var keyVal = document.getElementById('key').value;
 sifreTuru = document.getElementById('turu').value;
     socket.emit('chat', {
-        message: sifrele(message.value),
-        handle: sifrele(handle.value),
+        message: sifrele(message.value,(keyVal=="")?0:parseInt(keyVal)),
+        handle: sifrele(handle.value,(keyVal=="")?0:parseInt(keyVal)),
+        key:(keyVal=="")?0:keyVal,
         type: sifreTuru
-    });
-
+    }); 
 });
-
-
+ 
 message.addEventListener('keyup', function () {
     socket.emit('typing', {
         message: message.value,
@@ -44,7 +44,10 @@ socket.on('users', function (data) {
     });
 })
 socket.on('chat', function (data) {
-    output.innerHTML += '<strong>' + data.handle + ' = "' + coz(data.handle,data.type) + '"</strong><p>' + data.message + ' = "' + coz(data.message,data.type) + '"</p>';
+
+    console.log(data);
+    output.innerHTML += '<strong>Sifreli Gelen Metin: ' + data.handle + ' = Cozulmus metin : "' + coz(data.handle,data.type,data.key) +
+     '"</strong><p> Sifreli Gelen Metin:' + data.message + ' = Cozulmus metin :"' + coz(data.message,data.type,data.key) + '"</p>';
     message.value = "";
     typer.innerHTML = '';
 
@@ -56,38 +59,39 @@ socket.on('typing', function (data) {
         typer.innerHTML = '';
 
 });
-function coz(value,type)
+function coz(value,type,key)
 {
     if(type=="Sezar")
     { 
-      return sezarCoz(3,value);
+      return sezarCoz(key,value);
     }
-    else if(sifreTuru=="Columnar")
+    else if(type=="Columnar")
     {
         return columnarCoz(value)
     }
-    else if(sifreTuru=="Polybuis")
+    else if(type=="Polybuis")
     {
         return polybiusCoz(value)
     }
-    else if(sifreTuru=="Cit")
+    else if(type=="Cit")
     {
         return ciftCoz(value)
     }
-    else if(sifreTuru=="Vigenere")
-    {
-        return vigenereDecrypt(value,"trabzon")
+    else if(type=="Vigenere")
+    { 
+        return vigenereDecrypt(value,key)
     }
-    else if(sifreTuru=="tekmatris")
+    else if(type=="tekmatris")
     {
         return hillSifreleme(value)
     }
 }
-function sifrele(metin)
+function sifrele(metin,key)
 {
+ 
     if(sifreTuru=="Sezar")
-    { 
-      return sezarSifrele(3,metin);
+    {   
+      return sezarSifrele(key,metin);
     }
     else if(sifreTuru=="Columnar")
     {
@@ -112,11 +116,11 @@ function sifrele(metin)
 
 }
 //SezarSifreleme
-function sezarSifrele(key, word) {
-    var sifre = "";
+function sezarSifrele(key, word) { 
+    var sifre = ""; 
     for (var i = 0; i < word.length; i++) {
         var locat = letters.indexOf(word[i]);
-        ptr = (locat + key) % letters.length;
+        ptr = (locat + key) % letters.length;  
         sifre += letters[ptr];
     }
     return sifre;
@@ -291,9 +295,7 @@ function vigenereDecrypt(encryptedText, keyword) {
 
     return decryptedText;
 }
-
-/* Vigenere Crypt End */
-columnarSifrele("merhabadunyalinasilsinahmetkorkmaz")
+ 
 //Columnar algortimasi
 function columnarSifrele(metin) {
     metin=metin.toUpperCase()
@@ -344,8 +346,7 @@ sifre=sifre.toUpperCase()
     }
     return cevap;
 }
-const alfabe="abcçdefğghıijklmnoöprsştuüvyz"
-hillSifreleme("merhaba");
+const alfabe="abcçdefğghıijklmnoöprsştuüvyz" 
 function hillSifreleme(metin)
 {
     cevap=""
