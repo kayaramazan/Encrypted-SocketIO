@@ -21,8 +21,8 @@ btn.addEventListener('click', function () {
 var keyVal = document.getElementById('key').value;
 sifreTuru = document.getElementById('turu').value;
     socket.emit('chat', {
-        message: sifrele(message.value,(keyVal=="")?0:parseInt(keyVal)),
-        handle: sifrele(handle.value,(keyVal=="")?0:parseInt(keyVal)),
+        message: sifrele(message.value,(keyVal=="")?0:(keyVal)),
+        handle: sifrele(handle.value,(keyVal=="")?0:(keyVal)),
         key:(keyVal=="")?0:keyVal,
         type: sifreTuru
     }); 
@@ -47,7 +47,7 @@ socket.on('chat', function (data) {
 
     console.log(data);
     output.innerHTML += '<strong>Sifreli Gelen Metin: ' + data.handle + ' = Cozulmus metin : "' + coz(data.handle,data.type,data.key) +
-     '"</strong><p> Sifreli Gelen Metin:' + data.message + ' = Cozulmus metin :"' + coz(data.message,data.type,data.key) + '"</p>';
+     '"</strong><p> Sifreli Gelen Metin: ' + data.message + ' = Cozulmus metin :"' + coz(data.message,data.type,data.key) + '"</p>';
     message.value = "";
     typer.innerHTML = '';
 
@@ -62,7 +62,7 @@ socket.on('typing', function (data) {
 function coz(value,type,key)
 {
     if(type=="Sezar")
-    { 
+    {  key=parseInt(key)
       return sezarCoz(key,value);
     }
     else if(type=="Columnar")
@@ -91,6 +91,7 @@ function sifrele(metin,key)
  
     if(sifreTuru=="Sezar")
     {   
+        key=parseInt(key)
       return sezarSifrele(key,metin);
     }
     else if(sifreTuru=="Columnar")
@@ -107,7 +108,8 @@ function sifrele(metin,key)
     }
     else if(sifreTuru=="Vigenere")
     {
-        return vigenereEncrypt(metin,"trabzon")
+        console.log(metin+ key);
+        return vigenereEncrypt(metin,key)
     }
     else if(sifreTuru=="tekmatris")
     {
@@ -241,6 +243,7 @@ tabulaRecta = {
 };
 //console.log(vigenereEncrypt("daimaguvenlihaberlesin","birzamanlarsogukbirkis"))
 function vigenereEncrypt(plainText, keyword) {
+    console.log(plainText +" keywoed" + keyword);
     if (typeof (plainText) !== 'string') {
         return 'Gecersiz metin' + typeof (plainText);
     }
@@ -262,7 +265,7 @@ function vigenereEncrypt(plainText, keyword) {
         } else {
             encryptedText += plainText[i];
             specialCharacterCount++;
-        }
+        } 
     }
 
     return encryptedText;

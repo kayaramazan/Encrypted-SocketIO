@@ -32,7 +32,7 @@ io.on('connection',function(socket){
     });
 
     socket.on('disconnect', () => {
-        console.log(socketlerim[socket.id] + " disconnected");
+        console.log(socketlerim[socket.id] + " disconnected" + socket.id);
         for (var i = 0; i < users.length; i++)
         if (users[i] === socketlerim[socket.id]) { 
             users.splice(i, 1);
